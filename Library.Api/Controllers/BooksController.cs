@@ -10,13 +10,15 @@ namespace Library.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class BooksController : ControllerBase
 {
     private readonly IRepository<Books> _booksRepository;
-    public BooksController(IRepository<Books> booksRepository)
+    private readonly IBookDapperRepository _bookDapperRepository;
+    public BooksController(IRepository<Books> booksRepository, IBookDapperRepository bookDapperRepository)
     {
         _booksRepository = booksRepository;
+       _bookDapperRepository= bookDapperRepository;
     }
 
     // GET: api/<BooksController>
@@ -25,8 +27,9 @@ public class BooksController : ControllerBase
     {
         try
         {
+            var testForDapper= await _bookDapperRepository.GetAllAsync();
             var data = await _booksRepository.GetAllAsync();
-            return Ok(data);
+            return Ok(testForDapper.ToList());
         }
         catch (Exception ex)
         {
